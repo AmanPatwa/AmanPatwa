@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "317219318638",
+    "firebase_url": "https://amanpatwa-f9309.firebaseio.com",
+    "project_id": "amanpatwa-f9309",
+    "storage_bucket": "amanpatwa-f9309.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317219318638:android:04ed6b624e50282e",
+        "android_client_info": {
+          "package_name": "patwa.aman.com.amanpatwa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317219318638-utfrqphc8p2c14o9ol4t3ra5lael3685.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "patwa.aman.com.amanpatwa",
+            "certificate_hash": "7e1dba6778ef26cea5a35aa89e9dff2dc430a27f"
+          }
+        },
+        {
+          "client_id": "317219318638-tuvu93nt2jtq7huist1ojpmsd2fbb2uo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPkEeeL7XvIaSqZsVX4-dWw-J6LCb7Oqo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317219318638-tuvu93nt2jtq7huist1ojpmsd2fbb2uo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

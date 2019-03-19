@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AmanPatwa</string>
+    <string name="action_register">Register</string>
+
+    <string name="action_sign_in_short">Sign in</string>
+
+    <string name="action_sign_up">Sign up</string>
+
+    <string name="action_send">Send</string>
+    <string name="prompt_msg">Type a message</string>
+    <string name="sample_message">Hello!</string>
+
+</resources>
