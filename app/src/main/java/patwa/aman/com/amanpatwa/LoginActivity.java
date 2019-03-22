@@ -45,7 +45,8 @@ public class LoginActivity extends AppCompatActivity
 //            startActivity(loginIntent);
 //            finish();
 //        }
-        if(currentUser != null && type.equals("Personel") && currentUser.isEmailVerified()){
+        if(currentUser != null && type.equals("Personel")){
+            System.out.println("Current user "+currentUser);
             Intent loginIntent = new Intent(LoginActivity.this, MainChatActivity.class);
             loginIntent.putExtra("type",type);
             startActivity(loginIntent);

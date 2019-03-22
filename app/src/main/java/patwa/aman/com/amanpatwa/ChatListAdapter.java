@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -27,7 +29,7 @@ public class ChatListAdapter extends BaseAdapter {
     private DatabaseReference mDataBaseReference;
     private String mDisplayName;
     private ArrayList<DataSnapshot> mSnapShotList;
-    private String mtype;
+    private String mtype,type,messtype;
 
     ChildEventListener listener = new ChildEventListener() {
         @Override
@@ -71,20 +73,20 @@ public class ChatListAdapter extends BaseAdapter {
     static class ViewHolder{
         TextView authorName;
         TextView body;
+        ImageView imagemess;
         LinearLayout.LayoutParams params;
+        LinearLayout.LayoutParams params2,imageparams;
     }
 
 
     @Override
     public int getCount() {
-        Log.d("PubChat","getCount() called");
         return mSnapShotList.size();
     }
 
     @Override
     public InstantMessage getItem(int position) {
         DataSnapshot snapshot = mSnapShotList.get(position);
-        Log.d("PubChat","getItem() called");
         return snapshot.getValue(InstantMessage.class);
     }
 
@@ -98,49 +100,74 @@ public class ChatListAdapter extends BaseAdapter {
         if(ConvertView == null){
             LayoutInflater inflater = (LayoutInflater)mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             ConvertView = inflater.inflate(R.layout.chat_msg_row, parent, false);
-            Log.d("PubChat","Data stored in ConvertView");
 
             final ViewHolder holder = new ViewHolder();
             holder.authorName = (TextView) ConvertView.findViewById(R.id.author);
             holder.body = (TextView) ConvertView.findViewById(R.id.message);
+            holder.imagemess=(ImageView) ConvertView.findViewById(R.id.chat_image);
             holder.params = (LinearLayout.LayoutParams)holder.authorName.getLayoutParams();
+            holder.params2= (LinearLayout.LayoutParams)holder.body.getLayoutParams();
+            holder.imageparams=(LinearLayout.LayoutParams)holder.imagemess.getLayoutParams();
             ConvertView.setTag(holder);
         }
         final InstantMessage message = getItem(position);
         final ViewHolder holder = (ViewHolder)ConvertView.getTag();
+        type=message.getMtype();
+        messtype = message.getMesstype();
 
         boolean isMe = message.getAuthor().equals(mDisplayName);
-        setChatRowAppearance(isMe,holder);
+        setChatRowAppearance(isMe,holder,type,messtype);
+
 
         String author = message.getAuthor();
         holder.authorName.setText(author);
 
         String msg = message.getMessage();
-        holder.body.setText(msg);
-        Log.d("PubChat","getView() executed");
 
+        if(messtype.equals("image")){
+            holder.body.setVisibility(View.INVISIBLE);
+            Picasso.with(mActivity).load(msg)
+                    .fit()
+                    .centerCrop()
+                    .into(holder.imagemess);
+        }
+
+        else if(messtype.equals("text")) {
+            holder.imagemess.setVisibility(View.INVISIBLE);
+            holder.body.setText(msg);
+
+        }
         return ConvertView;
     }
 
-    private void setChatRowAppearance(boolean isItMe, ViewHolder holder){
-        if(mtype.equals("Admin")){
+    private void setChatRowAppearance(boolean isItMe, ViewHolder holder, String type, String messtype){
+        System.out.println("Type:"+type);
+
+
+
+        if (type.equals("Admin")) {
             holder.params.gravity = Gravity.CENTER;
+            holder.params2.gravity = Gravity.CENTER;
+            holder.imageparams.gravity = Gravity.CENTER;
             holder.authorName.setTextColor(Color.BLACK);
-        }
-        if(isItMe){
+            holder.body.setBackgroundColor(Color.WHITE);
+        } else if (isItMe) {
             holder.params.gravity = Gravity.END;
+            holder.params2.gravity = Gravity.END;
+            holder.imageparams.gravity = Gravity.END;
             holder.authorName.setTextColor(Color.GREEN);
-            //holder.body.setBackgroundResource(R.drawable.bubble2);
-        }else{
+            holder.body.setBackgroundResource(R.drawable.bubble2);
+        } else {
             holder.params.gravity = Gravity.START;
+            holder.params2.gravity = Gravity.START;
+            holder.imageparams.gravity = Gravity.START;
             holder.authorName.setTextColor(Color.BLUE);
-            // holder.body.setBackgroundResource(R.drawable.bubble1);
+            holder.body.setBackgroundResource(R.drawable.bubble1);
         }
     }
 
     public void cleanUp(){
         mDataBaseReference.removeEventListener(listener);
-        Log.d("PubChat","cleanUp() called");
     }
 
 

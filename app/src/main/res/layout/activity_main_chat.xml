@@ -31,6 +31,16 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
+        <ImageButton
+            android:id="@+id/chat_plus"
+            android:layout_width="30dp"
+            android:minWidth="30dp"
+            android:layout_height="match_parent"
+            android:contentDescription="Send"
+            android:layout_gravity="left"
+            android:layout_weight="0.1"
+            android:src="@drawable/plus" />
+
         <EditText
             android:layout_height="fill_parent"
             android:layout_width="0dp"
