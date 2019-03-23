@@ -3,6 +3,7 @@ package patwa.aman.com.amanpatwa;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,6 +33,9 @@ public class ChatListAdapter extends BaseAdapter {
     private String mDisplayName;
     private ArrayList<DataSnapshot> mSnapShotList;
     private String mtype,type,messtype;
+    String msg;
+
+
 
     ChildEventListener listener = new ChildEventListener() {
         @Override
@@ -67,6 +73,8 @@ public class ChatListAdapter extends BaseAdapter {
         mDataBaseReference.addChildEventListener(listener);
         mSnapShotList = new ArrayList<>();
         mtype=type;
+
+        mDataBaseReference.keepSynced(true);
     }
 
 
@@ -108,8 +116,10 @@ public class ChatListAdapter extends BaseAdapter {
             holder.params = (LinearLayout.LayoutParams)holder.authorName.getLayoutParams();
             holder.params2= (LinearLayout.LayoutParams)holder.body.getLayoutParams();
             holder.imageparams=(LinearLayout.LayoutParams)holder.imagemess.getLayoutParams();
+
             ConvertView.setTag(holder);
         }
+
         final InstantMessage message = getItem(position);
         final ViewHolder holder = (ViewHolder)ConvertView.getTag();
         type=message.getMtype();
@@ -122,14 +132,31 @@ public class ChatListAdapter extends BaseAdapter {
         String author = message.getAuthor();
         holder.authorName.setText(author);
 
-        String msg = message.getMessage();
+        msg= message.getMessage();
 
         if(messtype.equals("image")){
             holder.body.setVisibility(View.INVISIBLE);
+
             Picasso.with(mActivity).load(msg)
+                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .fit()
                     .centerCrop()
-                    .into(holder.imagemess);
+                    .into(holder.imagemess, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d("OnSuccess","picasso");
+                        }
+
+                        @Override
+                        public void onError() {
+                            Log.d("OnError","picasso");
+                            Picasso.with(mActivity).load(msg)
+                                    .placeholder(R.drawable.ic_launcher_background)
+                                    .fit()
+                                    .centerCrop()
+                                    .into(holder.imagemess);
+                        }
+                    });
         }
 
         else if(messtype.equals("text")) {
@@ -142,8 +169,6 @@ public class ChatListAdapter extends BaseAdapter {
 
     private void setChatRowAppearance(boolean isItMe, ViewHolder holder, String type, String messtype){
         System.out.println("Type:"+type);
-
-
 
         if (type.equals("Admin")) {
             holder.params.gravity = Gravity.CENTER;

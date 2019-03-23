@@ -70,7 +70,7 @@ public class MainChatActivity extends AppCompatActivity {
         setUpDisplayName();
 
         mDataBaseReference =mDatabase.getReference("chats");
-
+        mDataBaseReference.keepSynced(true);
 
         // Link the Views in the layout to the Java code
         mInputText = (EditText) findViewById(R.id.messageInput);
@@ -128,6 +128,7 @@ public class MainChatActivity extends AppCompatActivity {
             messagetype="image";
 
             DatabaseReference imageRef = mDataBaseReference.child("messages").child(currentUser).push();
+            imageRef.keepSynced(true);
             String push_id=imageRef.getKey();
 
             StorageReference filepath = FirebaseStorage.getInstance().getReference("message_images").child(push_id + ".jpg");
@@ -141,6 +142,9 @@ public class MainChatActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
                                 String downloadUrl = task.getResult().toString();
+                                if(type.equals("Admin")){
+                                    mDisplayName="Admin";
+                                }
                                 InstantMessage chat = new InstantMessage(downloadUrl, mDisplayName,type,messagetype);
                                 chat.setMtype(type);
                                 chat.setMesstype(messagetype);
@@ -169,7 +173,7 @@ public class MainChatActivity extends AppCompatActivity {
             //Log.d("uid","PRINT:"+uid);
 
             DatabaseReference userData= mDatabase.getReference("users").child(currentUser);
-
+            userData.keepSynced(true);
             userData.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -220,7 +224,7 @@ public class MainChatActivity extends AppCompatActivity {
         currentUser=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference userData= mDatabase.getReference("users").child(currentUser);
-
+        userData.keepSynced(true);
         userData.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
